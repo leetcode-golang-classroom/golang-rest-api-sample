@@ -2,7 +2,10 @@ module github.com/leetcode-golang-classroom/golang-rest-api-sample
 
 go 1.22.4
 
-require github.com/spf13/viper v1.19.0
+require (
+	github.com/samber/slog-gin v1.13.6
+	github.com/spf13/viper v1.19.0
+)
 
 require (
 	github.com/bytedance/sonic v1.11.9 // indirect
@@ -24,7 +27,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/samber/slog-gin v1.13.6 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	go.opentelemetry.io/otel v1.29.0 // indirect
