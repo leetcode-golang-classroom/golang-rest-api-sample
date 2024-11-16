@@ -2,21 +2,28 @@ package main
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/application"
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/config"
+	mlog "github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/logger"
 )
 
 func main() {
-	app := application.New(config.AppConfig)
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+	logger := slog.New(slog.NewJSONHandler(
+		os.Stdout, &slog.HandlerOptions{
+			AddSource: true,
+		},
+	))
+	rootContext := context.WithValue(context.Background(), mlog.CtxKey{}, logger)
+	app := application.New(config.AppConfig, rootContext)
+	ctx, cancel := signal.NotifyContext(rootContext, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 	err := app.Start(ctx)
 	if err != nil {
-		log.Fatalf("failed to start app: %v", err)
+		logger.Error("failed to start app", "error", err)
 	}
 }

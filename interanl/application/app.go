@@ -3,12 +3,12 @@ package application
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/config"
+	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/logger"
 )
 
 // define app dependency
@@ -17,20 +17,21 @@ type App struct {
 	config *config.Config
 }
 
-func New(config *config.Config) *App {
+func New(config *config.Config, ctx context.Context) *App {
 	app := &App{
 		config: config,
 	}
-	app.SetupRoutes()
+	app.SetupRoutes(ctx)
 	return app
 }
 
 func (app *App) Start(ctx context.Context) error {
+	logger := logger.FromContext(ctx)
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%s", app.config.Port),
 		Handler: app.Router,
 	}
-	log.Printf("Starting server on %s", app.config.Port)
+	logger.Info(fmt.Sprintf("Starting server on %s", app.config.Port))
 	errCh := make(chan error, 1)
 	go func() {
 		err := server.ListenAndServe()
@@ -44,7 +45,7 @@ func (app *App) Start(ctx context.Context) error {
 	case err := <-errCh:
 		return err
 	case <-ctx.Done():
-		log.Println("server cancel")
+		logger.Info("server cancel")
 		timeout, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 		return server.Shutdown(timeout)
