@@ -24,8 +24,6 @@ jobs:
           check-latest: true
       - name: Task Build
         run: task build
-      - name: Task Test
-        run: task test
       - name: Task Build for mage
         run: task build-gg
       - name: Test with gg
