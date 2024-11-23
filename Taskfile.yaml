@@ -19,15 +19,16 @@ tasks:
 
   build-mage:
     cmds:
-      - CGO_ENABLED=0 GOOS=linux go build -o mage mage-tools/mage.go
+      - CGO_ENABLED=0 GOOS=linux go build -o ./mage mage-tools/mage.go
     silent: true
   
   build-gg:
     cmds:
-      - mage -d mage-tools -compile ../gg
+      - ./mage -d mage-tools -compile ../gg
     deps:
       - build-mage
     silent: true
+
   coverage:
     cmds:
       - go test -v -cover ./...

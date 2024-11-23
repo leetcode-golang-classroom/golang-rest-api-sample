@@ -31,4 +31,4 @@ jobs:
       - name: Task Build for mage
         run: task build-gg
       - name: Test with gg
-        run: gg test
+        run: ./gg test
