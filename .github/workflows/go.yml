@@ -26,6 +26,8 @@ jobs:
         run: task build
       - name: Task Test
         run: task test
+      - name: Task Build mage
+        run: task build-mage
       - name: Task Build for mage
         run: task build-gg
       - name: Test with gg
