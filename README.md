@@ -267,3 +267,91 @@ func Test_DeleteNewsByID(t *testing.T) {
 	}
 }
 ```
+
+## Add Mage Tools
+
+[Mage](https://magefile.org/) is a tool for setup build tool with golang
+
+### how to use
+
+1. install dependency
+
+```shell
+go get github.com/magefile/mage/mage
+```
+
+2. create a execute file
+
+```golang
+//go:build ignore
+// +build ignore
+
+package main
+
+import (
+	"os"
+
+	"github.com/magefile/mage/mage"
+)
+
+func main() { os.Exit(mage.Main()) }
+```
+
+**Notice**: 檔案前面的 // +build ignore 是避免 mage 編譯這隻檔案
+
+3. create a task file for run task
+
+```golang
+//go:build mage
+// +build mage
+
+package main
+
+import (
+	"github.com/magefile/mage/mg"
+	"github.com/magefile/mage/sh"
+)
+
+var Default = Build
+
+// clean the build binary
+func Clean() error {
+	return sh.Rm("bin")
+}
+
+// Creates the binary in the current directory.
+func Build() error {
+	mg.Deps(Clean)
+	if err := sh.Run("go", "mod", "download"); err != nil {
+		return err
+	}
+	return sh.Run("go", "build", "-o", "./bin/server", "./cmd/main.go")
+}
+
+// start the server
+func Launch() error {
+	mg.Deps(Build)
+	err := sh.RunV("./bin/server")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// run the test
+func Test() error {
+	err := sh.RunV("go", "test", "-v", "./...")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+```
+
+task 形式分成兩種 1. 有 error return 值 2. 沒有 error return 
+
+而參數的部份可以帶入 context 來作而外的處理
+
+相依性則透過 mg.Deps 來設定
+
+預設不會列印執行結果及過程。如果需要有列印執行結果，需要使用 sh.RunV 來作處理
