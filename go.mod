@@ -3,6 +3,7 @@ module github.com/leetcode-golang-classroom/golang-rest-api-sample
 go 1.22.4
 
 require (
+	github.com/magefile/mage v1.15.0
 	github.com/samber/slog-gin v1.13.6
 	github.com/spf13/viper v1.19.0
 )
@@ -23,7 +24,6 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/magefile/mage v1.15.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
