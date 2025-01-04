@@ -6,8 +6,10 @@ import (
 	"os"
 )
 
+// CtxKey - struct.
 type CtxKey struct{}
 
+// CtxWithLogger - create ctx with logger.
 func CtxWithLogger(ctx context.Context, logger *slog.Logger) context.Context {
 	if logger == nil {
 		return ctx
@@ -18,6 +20,7 @@ func CtxWithLogger(ctx context.Context, logger *slog.Logger) context.Context {
 	return context.WithValue(ctx, CtxKey{}, logger)
 }
 
+// FromContext - get slog from ctx.
 func FromContext(ctx context.Context) *slog.Logger {
 	if logger, ok := ctx.Value(CtxKey{}).(*slog.Logger); ok {
 		return logger

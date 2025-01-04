@@ -7,31 +7,35 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/config"
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/logger"
 )
 
-// define app dependency
+// App define app dependency.
 type App struct {
 	Router *gin.Engine
-	config *config.Config
+	cfg    *config.Config
 }
 
-func New(config *config.Config, ctx context.Context) *App {
+// New - app constructor.
+func New(ctx context.Context, cfg *config.Config) *App {
 	app := &App{
-		config: config,
+		cfg: cfg,
 	}
 	app.SetupRoutes(ctx)
 	return app
 }
 
+// Start - app 啟動.
 func (app *App) Start(ctx context.Context) error {
-	logger := logger.FromContext(ctx)
+	log := logger.FromContext(ctx)
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%s", app.config.Port),
-		Handler: app.Router,
+		Addr:              fmt.Sprintf(":%s", app.cfg.Port),
+		Handler:           app.Router,
+		ReadHeaderTimeout: time.Minute,
 	}
-	logger.Info(fmt.Sprintf("Starting server on %s", app.config.Port))
+	log.Info(fmt.Sprintf("Starting server on %s", app.cfg.Port))
 	errCh := make(chan error, 1)
 	go func() {
 		err := server.ListenAndServe()
@@ -45,9 +49,13 @@ func (app *App) Start(ctx context.Context) error {
 	case err := <-errCh:
 		return err
 	case <-ctx.Done():
-		logger.Info("server cancel")
-		timeout, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		log.Info("server cancel")
+		timeout, cancel := context.WithTimeout(ctx, time.Second*10)
 		defer cancel()
-		return server.Shutdown(timeout)
+		err := server.Shutdown(timeout)
+		if err != nil {
+			return fmt.Errorf("%w", err)
+		}
+		return nil
 	}
 }

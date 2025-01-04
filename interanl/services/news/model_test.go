@@ -9,24 +9,24 @@ import (
 func TestNewsPostBody_Validate(t *testing.T) {
 	testCases := []struct {
 		name        string
-		req         news.NewsPostReqBody
+		req         news.PostReqBody
 		expectedErr bool
 	}{
 		{
 			name:        "author empty",
-			req:         news.NewsPostReqBody{},
+			req:         news.PostReqBody{},
 			expectedErr: true,
 		},
 		{
 			name: "title empty",
-			req: news.NewsPostReqBody{
+			req: news.PostReqBody{
 				Author: "test-author",
 			},
 			expectedErr: true,
 		},
 		{
 			name: "summary invalid",
-			req: news.NewsPostReqBody{
+			req: news.PostReqBody{
 				Author: "test-author",
 				Title:  "test-title",
 			},
@@ -34,7 +34,7 @@ func TestNewsPostBody_Validate(t *testing.T) {
 		},
 		{
 			name: "time invalid",
-			req: news.NewsPostReqBody{
+			req: news.PostReqBody{
 				Author:    "test-author",
 				Title:     "test-title",
 				Summary:   "test-summary",
@@ -44,7 +44,7 @@ func TestNewsPostBody_Validate(t *testing.T) {
 		},
 		{
 			name: "source invalid",
-			req: news.NewsPostReqBody{
+			req: news.PostReqBody{
 				Author:    "test-author",
 				Title:     "test-title",
 				Summary:   "test-summary",
@@ -54,7 +54,7 @@ func TestNewsPostBody_Validate(t *testing.T) {
 		},
 		{
 			name: "tags is empty",
-			req: news.NewsPostReqBody{
+			req: news.PostReqBody{
 				Author:    "test-author",
 				Title:     "test-title",
 				Summary:   "test-summary",
@@ -65,7 +65,7 @@ func TestNewsPostBody_Validate(t *testing.T) {
 		},
 		{
 			name: "validate",
-			req: news.NewsPostReqBody{
+			req: news.PostReqBody{
 				Author:    "test-author",
 				Title:     "test-title",
 				Summary:   "test-summary",

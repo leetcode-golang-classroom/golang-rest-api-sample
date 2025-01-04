@@ -69,10 +69,10 @@ func Test_FromContext(t *testing.T) {
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			logger := logger.FromContext(tc.ctx)
+			log := logger.FromContext(tc.ctx)
 
-			if tc.expected && logger == nil {
-				t.Errorf("expected: %v, got: %v", tc.expected, logger)
+			if tc.expected && log == nil {
+				t.Errorf("expected: %v, got: %v", tc.expected, log)
 			}
 		})
 	}

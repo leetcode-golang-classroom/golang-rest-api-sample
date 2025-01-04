@@ -6,11 +6,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Config - App config.
 type Config struct {
 	Port    string `mapstructure:"PORT"`
 	GinMode string `mapstructure:"GIN_MODE"`
 }
 
+// AppConfig - global config.
 var AppConfig *Config
 
 func init() {

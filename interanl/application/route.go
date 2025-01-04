@@ -5,14 +5,15 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	sloggin "github.com/samber/slog-gin"
+
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/logger"
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/services/news"
-	sloggin "github.com/samber/slog-gin"
 )
 
-// define route
+// SetupRoutes - define route.
 func (app *App) SetupRoutes(ctx context.Context) {
-	gin.SetMode(app.config.GinMode)
+	gin.SetMode(app.cfg.GinMode)
 	router := gin.New()
 	// recovery middleward
 	router.Use(sloggin.New(logger.FromContext(ctx)))
@@ -24,8 +25,10 @@ func (app *App) SetupRoutes(ctx context.Context) {
 	app.SetupNewsRoutes()
 }
 
+// SetupNewsRoutes - setup new routes.
 func (app *App) SetupNewsRoutes() {
 	newGroups := app.Router.Group("/news")
-	handler := news.NewHandler()
+	newsStore := news.NewNewsStore()
+	handler := news.NewHandler(newsStore)
 	handler.RegisterRoute(newGroups)
 }

@@ -19,7 +19,7 @@ func main() {
 		},
 	))
 	rootContext := context.WithValue(context.Background(), mlog.CtxKey{}, logger)
-	app := application.New(config.AppConfig, rootContext)
+	app := application.New(rootContext, config.AppConfig)
 	ctx, cancel := signal.NotifyContext(rootContext, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 	err := app.Start(ctx)

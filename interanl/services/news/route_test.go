@@ -8,10 +8,12 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/application"
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/config"
 	"github.com/leetcode-golang-classroom/golang-rest-api-sample/interanl/logger"
-	"github.com/stretchr/testify/assert"
 )
 
 func Test_CreateNews(t *testing.T) {
@@ -30,14 +32,15 @@ func Test_CreateNews(t *testing.T) {
 				AddSource: true,
 			})))
 			// Arrange test
-			app := application.New(config.AppConfig, ctx)
+			app := application.New(ctx, config.AppConfig)
 			app.SetupRoutes(ctx)
 
 			w := httptest.NewRecorder()
-			r, _ := http.NewRequest(http.MethodPost, "/news", nil)
+			r, err := http.NewRequestWithContext(ctx, http.MethodPost, "/news", http.NoBody)
+			require.NoError(t, err)
 			// Act
 			app.Router.ServeHTTP(w, r)
-			assert.Equalf(t, tc.expectedStatus, w.Code, "expected %v ,got %v", tc.expectedStatus, w.Code)
+			assert.Equal(t, tc.expectedStatus, w.Code)
 		})
 	}
 }
@@ -58,14 +61,15 @@ func Test_GetAllNews(t *testing.T) {
 			ctx := context.WithValue(context.Background(), logger.CtxKey{}, slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 				AddSource: true,
 			})))
-			app := application.New(config.AppConfig, ctx)
+			app := application.New(ctx, config.AppConfig)
 			app.SetupRoutes(ctx)
 
 			w := httptest.NewRecorder()
-			r, _ := http.NewRequest(http.MethodGet, "/news", nil)
+			r, err := http.NewRequestWithContext(ctx, http.MethodGet, "/news", http.NoBody)
+			require.NoError(t, err)
 			// Act
 			app.Router.ServeHTTP(w, r)
-			assert.Equalf(t, tc.expectedStatus, w.Code, "expected %v ,got %v", tc.expectedStatus, w.Code)
+			assert.Equal(t, tc.expectedStatus, w.Code)
 		})
 	}
 }
@@ -86,14 +90,15 @@ func Test_GetNewsById(t *testing.T) {
 			ctx := context.WithValue(context.Background(), logger.CtxKey{}, slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 				AddSource: true,
 			})))
-			app := application.New(config.AppConfig, ctx)
+			app := application.New(ctx, config.AppConfig)
 			app.SetupRoutes(ctx)
 
 			w := httptest.NewRecorder()
-			r, _ := http.NewRequest(http.MethodGet, "/news/1", nil)
+			r, err := http.NewRequestWithContext(ctx, http.MethodGet, "/news/1", http.NoBody)
+			require.NoError(t, err)
 			// Act
 			app.Router.ServeHTTP(w, r)
-			assert.Equalf(t, tc.expectedStatus, w.Code, "expected %v ,got %v", tc.expectedStatus, w.Code)
+			assert.Equal(t, tc.expectedStatus, w.Code)
 		})
 	}
 }
@@ -114,14 +119,15 @@ func Test_UpdateNewsByID(t *testing.T) {
 			ctx := context.WithValue(context.Background(), logger.CtxKey{}, slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 				AddSource: true,
 			})))
-			app := application.New(config.AppConfig, ctx)
+			app := application.New(ctx, config.AppConfig)
 			app.SetupRoutes(ctx)
 
 			w := httptest.NewRecorder()
-			r, _ := http.NewRequest(http.MethodPut, "/news/1", nil)
+			r, err := http.NewRequestWithContext(ctx, http.MethodPut, "/news/1", http.NoBody)
+			require.NoError(t, err)
 			// Act
 			app.Router.ServeHTTP(w, r)
-			assert.Equalf(t, tc.expectedStatus, w.Code, "expected %v ,got %v", tc.expectedStatus, w.Code)
+			assert.Equal(t, tc.expectedStatus, w.Code)
 		})
 	}
 }
@@ -142,14 +148,15 @@ func Test_DeleteNewsByID(t *testing.T) {
 			ctx := context.WithValue(context.Background(), logger.CtxKey{}, slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
 				AddSource: true,
 			})))
-			app := application.New(config.AppConfig, ctx)
+			app := application.New(ctx, config.AppConfig)
 			app.SetupRoutes(ctx)
 
 			w := httptest.NewRecorder()
-			r, _ := http.NewRequest(http.MethodDelete, "/news/1", nil)
+			r, err := http.NewRequestWithContext(ctx, http.MethodDelete, "/news/1", http.NoBody)
+			require.NoError(t, err)
 			// Act
 			app.Router.ServeHTTP(w, r)
-			assert.Equalf(t, tc.expectedStatus, w.Code, "expected %v ,got %v", tc.expectedStatus, w.Code)
+			assert.Equal(t, tc.expectedStatus, w.Code)
 		})
 	}
 }
